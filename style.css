@@ -1,0 +1,120 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    height: 100vh;
+    background: linear-gradient(352deg,rgb(112, 112, 230), rgb(164, 69, 69)) no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.game {
+    background: linear-gradient(352deg,rgb(138, 138, 235), rgb(223, 117, 117)) no-repeat;
+    width: 800px;
+    height: 550px;
+    border: 1px solid black;
+    padding: 20px;
+    box-shadow: 1px 1px 10px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    gap: 15px;
+    perspective: 1000px;
+}
+.card img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+.card:active {
+    transform: scale(.9);
+    transition: transform .2s;
+}
+.hide {
+    scale: .9;
+}
+.card {
+    position: relative;
+    margin-bottom: 100px;
+    transform: scale(1);
+    transform-style: preserve-3d;
+    transition: transform .5s;
+}
+.open {
+    transform: rotateY(180deg);
+}
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+.front {
+    transform: rotateY(180deg);
+}
+.footer {
+    display: flex;
+    justify-content: space-between;
+}
+p {
+    font-size: 50px;
+    margin-top: 10px;
+}
+.restart{
+    margin-top: 15px;
+    margin-right: 12px;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+}
+.start {
+    position: fixed;
+    margin-top: 10px;
+    margin-left: 150px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 25px;
+    background-color: rgb(237, 97, 97);
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 10px 10px 15px;
+}
+.start:active {
+    transform: scale(.8);
+    transition: all .5s 1s;
+}
+.timer {
+    position: fixed;
+    margin-left: 450px;
+    font-size: 60px;
+}
+
+.popup {
+    width: 50%;
+    height: 50%;
+    background:linear-gradient(rgb(101, 58, 58),rgb(203, 203, 111));
+    box-shadow: 1px 1px 10px;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100px;
+    display: none;
+}
+
+.your {
+    font-size: 40px;
+    margin-top: 50px;
+}
