@@ -8,6 +8,16 @@ const list = document.querySelector(".list");
 const nameInput = document.querySelector(".name-input");
 const your = document.querySelector(".your");
 
+const songs = [
+  "./music/1.mp3",
+  "./music/2.mp3",
+  "./music/3.mp3",
+  "./music/4.mp3",
+  "./music/5.mp3",
+];
+
+const effects = ["./music/good.mp3", "./music/bad.mp3"];
+
 let firstCard, secondCard;
 let cardIsOpened = false;
 let lockBoard = false;
@@ -17,6 +27,9 @@ let checked = 0;
 let minute = 0;
 let second = 0;
 let time;
+
+let currentTrackIndex = 0;
+let audio = null;
 
 const loadRecords = () => {
   list.innerHTML = "";
@@ -54,7 +67,7 @@ const timeToSeconds = (timeStr) => {
 };
 
 const compareTime = (timeA, timeB) =>
-  timeToSeconds(timeA) - timeToSeconds(timeB);
+  timeToSeconds(timeA) - timeToSeconds(timeB.time);
 
 function cardOpen() {
   if (lockBoard || this === firstCard) return;
@@ -74,6 +87,9 @@ function cardOpen() {
 
 const checkCards = () => {
   if (firstCard.dataset.animal === secondCard.dataset.animal) {
+    const goodAudio = new Audio(effects[0]);
+    goodAudio.play();
+
     checked++;
     firstCard.removeEventListener("click", cardOpen);
     secondCard.removeEventListener("click", cardOpen);
@@ -86,6 +102,10 @@ const checkCards = () => {
     attempt++;
     theEnd();
   } else {
+    const badAudio = new Audio(effects[1]);
+    badAudio.volume = 0.1;
+    badAudio.play();
+
     lockBoard = true;
     setTimeout(() => {
       firstCard.classList.remove("open");
@@ -106,6 +126,8 @@ const theEnd = () => {
       popup.style.display = "block";
       your.textContent = `your time: ${timer.textContent}`;
 
+      audio.pause();
+
       const name = nameInput.value.trim() || "Player";
       const finalTime = timer.textContent;
       const attempts = attempt;
@@ -123,9 +145,32 @@ const saveRecordToLocalStorage = (name, attempt, time) => {
   localStorage.setItem("records", JSON.stringify(records));
 };
 
+const playNextSong = () => {
+  currentTrackIndex++;
+  if (currentTrackIndex < songs.length) {
+    audio.src = songs[currentTrackIndex];
+    audio.play();
+  }
+};
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
 const timing = () => {
   starter.style.display = "none";
   nameInput.style.display = "none";
+
+  shuffleArray(songs);
+
+  audio = new Audio(songs[currentTrackIndex]);
+  audio.volume = 0.5;
+  audio.play();
+
+  audio.addEventListener("ended", playNextSong);
 
   time = setInterval(() => {
     second++;
