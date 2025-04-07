@@ -66,8 +66,10 @@ const timeToSeconds = (timeStr) => {
   return minutes * 60 + seconds;
 };
 
-const compareTime = (timeA, timeB) =>
-  timeToSeconds(timeA) - timeToSeconds(timeB.time);
+const compareTime = (a, b) => {
+  if (!a.time || !b.time) return 0;
+  return timeToSeconds(a.time) - timeToSeconds(b.time);
+};
 
 function cardOpen() {
   if (lockBoard || this === firstCard) return;
@@ -141,16 +143,19 @@ const theEnd = () => {
 const saveRecordToLocalStorage = (name, attempt, time) => {
   const records = JSON.parse(localStorage.getItem("records")) || [];
   records.push({ name, attempt, time });
-  records.sort((a, b) => compareTime(a.time, b.time));
+  records.sort((a, b) => compareTime(a, b));
   localStorage.setItem("records", JSON.stringify(records));
 };
 
 const playNextSong = () => {
   currentTrackIndex++;
-  if (currentTrackIndex < songs.length) {
-    audio.src = songs[currentTrackIndex];
-    audio.play();
+
+  if (currentTrackIndex >= songs.length) {
+    currentTrackIndex = 0;
   }
+
+  audio.src = songs[currentTrackIndex];
+  audio.play();
 };
 
 const shuffleArray = (array) => {
@@ -190,7 +195,7 @@ const timing = () => {
 
 (function start() {
   cards.forEach((card) => {
-    card.style.order = Math.floor(Math.random() * 24);
+    card.style.order = Math.floor(Math.random() * 62);
   });
 })();
 
